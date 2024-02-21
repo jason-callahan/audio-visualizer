@@ -16,6 +16,8 @@ import visualizer from "./visualizer.js";
   const logoCanvas = document.createElement("canvas");
   const logoContext = logoCanvas.getContext("2d");
 
+  const playButton = document.getElementById("playButton");
+
   let windowWidth = window.innerWidth;
   let windowHeight = window.innerHeight;
   let windowScaleWidth = windowWidth / 1920;
@@ -100,7 +102,7 @@ import visualizer from "./visualizer.js";
   };
 
   let fullScreen = false;
-  const handleBodyClick = (e) => {
+  const handleFullScreen = (e) => {
     fullScreen = !fullScreen;
     if (fullScreen) document.body.requestFullscreen();
     else document.exitFullscreen();
@@ -109,6 +111,11 @@ import visualizer from "./visualizer.js";
   const initControls = () => {
     let controls = document.getElementById("audio");
     let showTween = null;
+
+    playButton.addEventListener("click", () => {
+      controls.play();
+    });
+
     const showControls = () => {
       if (hideTween) hideTween.kill();
       if (!gsap.isTweening(controls))
@@ -133,9 +140,11 @@ import visualizer from "./visualizer.js";
     controls.onmouseout = hideControls;
     controls.addEventListener("ended", showControls);
 
-    setTimeout(() => {
-      if (!controls.paused && !controls.ended) hideControls();
-    }, 2000);
+    audio.addEventListener("play", () => {
+      setTimeout(() => {
+        if (!controls.paused && !controls.ended) hideControls();
+      }, 2000);
+    });
   };
 
   const visualize = (audio, analyserLeft, analyserRight, audioContext) => {
@@ -143,12 +152,13 @@ import visualizer from "./visualizer.js";
     const dataArrayLeft = new Uint8Array(bufferLength);
     const dataArrayRight = new Uint8Array(bufferLength);
 
-    audio.addEventListener("play", () =>
-      audioContext.resume().then(() => draw())
-    );
+    audio.addEventListener("play", () => {
+      audioContext.resume().then(() => draw());
+      playButton.classList.add("hidden");
+    });
 
     audio.src = "SnapOneAnthem.mp3";
-    audio.play();
+    // audio.play();
 
     let sampleSize = 2;
     let sampleSum = 0;
@@ -229,7 +239,9 @@ import visualizer from "./visualizer.js";
   };
 
   window.addEventListener("resize", handleResize);
-  window.addEventListener("click", handleBodyClick);
+  document
+    .getElementById("fullscreen")
+    .addEventListener("click", handleFullScreen);
   window.onload = function () {
     handleResize();
     initControls();
@@ -237,3 +249,4 @@ import visualizer from "./visualizer.js";
     visualize(audio, analyserLeft, analyserRight, audioContext);
   };
 })();
+fullscreen;

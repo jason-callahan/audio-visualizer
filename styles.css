@@ -26,9 +26,39 @@
     /* cursor: pointer; */
   }
   
-  svg {
-    width: 61.8vw;
-    position: relative;
+  #playButton {
+    width: 38.2vh;
+    fill: rgb(255,255,255);
+    z-index: 1;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    opacity: .8;
+  }
+  #playButton:hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  #fullscreen {
+    width: 50px;
+    fill: rgb(255,255,255);
+    z-index: 1;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: .3;
+  }
+  #fullscreen:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
+
+  #playButton.hidden {
+    display: none;
   }
 
   .fill_logo {
